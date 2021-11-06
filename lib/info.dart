@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'design.dart';
 class InfoPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -33,7 +35,7 @@ class InfoPageState extends State<InfoPage>{
   Widget _buildPhoneNo(){
     return TextFormField(
         decoration: InputDecoration(
-            labelText: "Email",
+            labelText: "phone number",
             border: OutlineInputBorder()
         ),
 
@@ -54,7 +56,24 @@ class InfoPageState extends State<InfoPage>{
           SizedBox(height: 100),
           RaisedButton(
             child: Text("Submit",style: TextStyle(color: Colors.blue,fontSize: 16)),
-            onPressed: (){},
+            onPressed: (){
+              final snackBar = SnackBar(content: Text('User Saved'));
+
+// Find the ScaffoldMessenger in the widget tree
+// and use it to show a SnackBar.
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Colors.cyanAccent[200],
+                    title: Text("Test"),
+                    centerTitle: true,
+                  ),
+                  body: DesignPage(),
+                )),
+              );
+            },
           )
           ]
           // email ,phone number and a submit button
