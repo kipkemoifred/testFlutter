@@ -1,22 +1,46 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'data.dart';
-class ResponsePage extends StatelessWidget {
+class ResponsePage extends StatefulWidget {
+  @override
+  _ResponsePageState createState() => _ResponsePageState();
+}
+
+class _ResponsePageState extends State<ResponsePage> {
+  getUserData()async{
+    var response=
+    await http.get(Uri.https('jsonplaceholder.typicode.com', 'todos',{'_limit':'5'}));//?_limit=5
+    var jsonData=jsonDecode(response.body);
+    List <Todo> todos=[];
+    for(var u in jsonData){
+      Todo todo=Todo(u["title"], u["completed"]);
+      todos.add(todo);
+    }
+    print(todos.length);
+    return todos;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Card(
-        child: FutureBuilder(
+        child: FutureBuilder(//<List<Todo>>
+
           future: getUserData(),
-          builder: (context,snapshot){
+          builder: (BuildContext context,AsyncSnapshot  snapshot){//AsyncSnapshot<List<Todo>>
             if(snapshot.data==null){
               return Container(
                 child: Center(
                   child: Text("Loading..."),),);
             }
             else{
-              return ListView.builder(itemBuilder: (context,i){//itemCount:snapshot.data.length,
+              return ListView.builder(
+                  itemCount:snapshot.data.length,
+                  itemBuilder: (context,i){
                 return ListTile(
-                  //title: Text(snapshot.data![i].name),
+                  title: Text(snapshot.data[i].title),
                 );
               });
             }
@@ -24,12 +48,12 @@ class ResponsePage extends StatelessWidget {
         ),
       ),
     );
-    // class Todo{
-    // String title="";
-    // bool completed=false;//final
-    // Todo(this.title,this.completed);
-    // }
-
-    //);
   }
+}
+
+
+class Todo{
+  String title;
+  bool completed;//final
+  Todo(this.title,this.completed);
 }
